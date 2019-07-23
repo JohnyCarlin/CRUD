@@ -1,8 +1,8 @@
 package servlet;
 
 import model.User;
+import service.UserServiceImpl;
 import service.UserService;
-import service.UserServiceInterface;
 
 import java.io.IOException;
 import java.util.List;
@@ -16,10 +16,10 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet(urlPatterns = "/", description = "User Management Servlet")
 public class ListUserServlet extends HttpServlet {
-    private UserServiceInterface userService;
+    private UserService userService;
 
     public void init() {
-        userService = new UserService();
+        userService = new UserServiceImpl();
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -29,7 +29,7 @@ public class ListUserServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        List <User> listUser = userService.selectAllUsers();
+        List<User> listUser = userService.getAllUsers();
         request.setAttribute("listUser", listUser);
         RequestDispatcher dispatcher = request.getRequestDispatcher("list-user.jsp");
         dispatcher.forward(request, response);

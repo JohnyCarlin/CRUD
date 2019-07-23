@@ -1,42 +1,18 @@
 package service;
 
-import dao.UserDAO;
-import dao.UserDAOInterface;
 import model.User;
-
 
 import java.util.List;
 
-public class UserService implements UserServiceInterface {
+public interface UserService {
 
-    private UserDAOInterface userDAO;
+    void addNewUser(User user);
 
-    public UserService() {
-        this.userDAO =  new UserDAO();
-    }
+    User getUserbyID(Integer id);
 
-    @Override
-    public void insertUser(User user) {
-        userDAO.insertUser(user);
-    }
+    List<User> getAllUsers();
 
-    @Override
-    public User selectUser(int id) {
-        return userDAO.selectUser(id);
-    }
+    boolean removeUser(Integer id);
 
-    @Override
-    public List<User> selectAllUsers() {
-        return userDAO.selectAllUsers();
-    }
-
-    @Override
-    public boolean deleteUser(int id) {
-        return userDAO.deleteUser(id);
-    }
-
-    @Override
-    public boolean updateUser(User user) {
-        return userDAO.updateUser(user);
-    }
+    boolean editExistingUser(User user);
 }
