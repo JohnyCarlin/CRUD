@@ -1,10 +1,13 @@
 package model;
 
+
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class UserDataSet implements Serializable {
+
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,20 +22,17 @@ public class User {
     @Column(name = "country")
     private String country;
 
-    public User() {
+    //Important to Hibernate!
+    @SuppressWarnings("UnusedDeclaration")
+    public UserDataSet() {
     }
 
-    public User(String name, String email, String country) {
-        this.name = name;
-        this.email = email;
-        this.country = country;
-    }
-
-    public User(Integer id, String name, String email, String country) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.country = country;
+    @SuppressWarnings("UnusedDeclaration")
+    public UserDataSet(Integer id, String name, String email, String country) {
+        this.setId(id);
+        this.setName(name);
+        this.setEmail(email);
+        this.setCountry(country);
     }
 
     public Integer getId() {
@@ -65,5 +65,15 @@ public class User {
 
     public void setCountry(String country) {
         this.country = country;
+    }
+
+    @Override
+    public String toString() {
+        return "UserDataSet{" +
+                "id=" + id +
+                ", name='" + name + "\'" +
+                ", email='" + email + '\'' +
+                ", country='" + country + "\'" +
+                "}";
     }
 }

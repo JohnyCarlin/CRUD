@@ -1,5 +1,6 @@
 package service;
 
+import dao.UserDAOImplHibernate;
 import dao.UserDAOImplJDBC;
 import dao.UserDAO;
 import model.User;
@@ -12,7 +13,7 @@ public class UserServiceImpl implements UserService {
     private UserDAO userDAO;
 
     public UserServiceImpl() {
-        this.userDAO =  new UserDAOImplJDBC();
+        this.userDAO =  new UserDAOImplHibernate();
     }
 
     @Override
