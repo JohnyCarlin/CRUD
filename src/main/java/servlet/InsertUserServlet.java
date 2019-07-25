@@ -17,7 +17,7 @@ public class InsertUserServlet extends HttpServlet {
     private UserService userService;
 
     public void init() {
-        userService = new UserServiceImpl();
+        userService = UserServiceImpl.getUserService();
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)

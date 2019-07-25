@@ -1,19 +1,25 @@
 package service;
 
-import dao.UserDAOImplHibernate;
-import dao.UserDAOImplJDBC;
 import dao.UserDAO;
+import dao.UserDaoFactory;
 import model.User;
-
 
 import java.util.List;
 
 public class UserServiceImpl implements UserService {
 
     private UserDAO userDAO;
+    private static UserServiceImpl userService = null;
 
-    public UserServiceImpl() {
-        this.userDAO =  new UserDAOImplHibernate();
+    private UserServiceImpl() {
+        this.userDAO =  new UserDaoFactory().getUserDAO();
+    }
+
+    public static UserServiceImpl getUserService() {
+        if (userService == null) {
+            userService = new UserServiceImpl();
+        }
+        return userService;
     }
 
     @Override
@@ -22,7 +28,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserbyID(Integer id) {
+    public User getUserByID(Integer id) {
         return userDAO.getUserbyID(id);
     }
 

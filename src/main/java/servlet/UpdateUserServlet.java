@@ -17,7 +17,7 @@ public class UpdateUserServlet extends HttpServlet {
     private UserService userService;
 
     public void init() {
-        userService = new UserServiceImpl();
+        userService = UserServiceImpl.getUserService();
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -34,7 +34,7 @@ public class UpdateUserServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         Integer id = Integer.parseInt(request.getParameter("id"));
-        User existingUser = userService.getUserbyID(id);
+        User existingUser = userService.getUserByID(id);
         RequestDispatcher dispatcher = request.getRequestDispatcher("create-user.jsp");
         request.setAttribute("user", existingUser);
         dispatcher.forward(request, response);

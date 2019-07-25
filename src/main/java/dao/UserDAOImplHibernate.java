@@ -1,5 +1,6 @@
 package dao;
 
+import config.DBHelper;
 import model.User;
 import org.hibernate.*;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
@@ -10,28 +11,13 @@ import java.util.List;
 
 public class UserDAOImplHibernate implements UserDAO {
 
-    private static final String hibernate_show_sql = "true";
-    private static final String hibernate_hbm2ddl_auto = "update";
+    private Configuration configuration;
 
     public final SessionFactory sessionFactory;
 
     public UserDAOImplHibernate() {
-        Configuration configuration = getMySqlConfiguration();
+        this.configuration = DBHelper.getConfiguration();
         sessionFactory = createSessionFactory(configuration);
-    }
-
-    @SuppressWarnings("UnusedDeclaration")
-    private Configuration getMySqlConfiguration() {
-        Configuration configuration = new Configuration();
-        configuration.addAnnotatedClass(User.class);
-        configuration.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
-        configuration.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
-        configuration.setProperty("hibernate.connection.url", "jdbc:mysql://localhost:3306/demo");
-        configuration.setProperty("hibernate.connection.username", "java");
-        configuration.setProperty("hibernate.connection.password", "cookingpies");
-        configuration.setProperty("hibernate.show_sql", hibernate_show_sql);
-        configuration.setProperty("hibernate.hbm2ddl.auto", hibernate_hbm2ddl_auto);
-        return configuration;
     }
 
     private static SessionFactory createSessionFactory(Configuration configuration) {
@@ -46,41 +32,61 @@ public class UserDAOImplHibernate implements UserDAO {
         return session.load(User.class, id);
     }
 
-    public void addNewUser(User user) {
-        Session session = this.sessionFactory.openSession();
-        Transaction trx = session.beginTransaction();
-        session.save(user);
-        trx.commit();
-        session.close();
-    }
-
     @SuppressWarnings("unchecked")
     public List<User> getAllUsers() {
         Session session = this.sessionFactory.openSession();
-        Criteria criteria = session.createCriteria(User.class);
-        return criteria.list();
-//        return session.createQuery("from User").list();
+        return session.createQuery("from User", User.class).list();
+    }
+
+    public void addNewUser(User user) {
+        Session session = this.sessionFactory.openSession();
+        Transaction trx = null;
+        try {
+            trx = session.beginTransaction();
+            session.save(user);
+            trx.commit();
+        } catch (Exception e) {
+            if (trx != null) trx.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
     }
 
     public boolean removeUser(Integer id) {
         Session session = this.sessionFactory.openSession();
         User user = session.load(User.class, id);
-        Transaction trx = session.beginTransaction();
-
-        if (user != null) {
-            session.delete(user);
-            trx.commit();
+        Transaction trx = null;
+        try {
+            trx = session.beginTransaction();
+            if (user != null) {
+                session.delete(user);
+                trx.commit();
+            }
             return true;
+        } catch (Exception e) {
+            if (trx != null) trx.rollback();
+            e.printStackTrace();
+            return false;
+        } finally {
+            session.close();
         }
-        return false;
     }
 
     public boolean editExistingUser(User user) {
         Session session = this.sessionFactory.openSession();
-        Transaction trx = session.beginTransaction();
-        session.update(user);
-        trx.commit();
-        session.close();
-        return true;
+        Transaction trx = null;
+        try {
+            trx = session.beginTransaction();
+            session.update(user);
+            trx.commit();
+            return true;
+        } catch (Exception e) {
+            if (trx != null) trx.rollback();
+            e.printStackTrace();
+            return false;
+        } finally {
+            session.close();
+        }
     }
 }
