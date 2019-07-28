@@ -38,7 +38,7 @@ public class UserDAOImplJDBC implements UserDAO {
         }
     }
 
-    public User getUserbyID(Integer id) {
+    public User getUserByID(Integer id) {
         User user = null;
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_BY_ID);

@@ -1,7 +1,7 @@
 package service;
 
 import dao.UserDAO;
-import dao.UserDaoFactory;
+import dao.UserDAOFactory;
 import model.User;
 
 import java.util.List;
@@ -12,7 +12,7 @@ public class UserServiceImpl implements UserService {
     private static UserServiceImpl userService = null;
 
     private UserServiceImpl() {
-        this.userDAO =  new UserDaoFactory().getUserDAO();
+        this.userDAO =  UserDAOFactory.getUserDAOFactory().getUserDAO();
     }
 
     public static UserServiceImpl getUserService() {
@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserByID(Integer id) {
-        return userDAO.getUserbyID(id);
+        return userDAO.getUserByID(id);
     }
 
     @Override

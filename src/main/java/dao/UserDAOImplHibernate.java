@@ -27,7 +27,7 @@ public class UserDAOImplHibernate implements UserDAO {
         return configuration.buildSessionFactory(serviceRegistry);
     }
 
-    public User getUserbyID(Integer id) throws HibernateException {
+    public User getUserByID(Integer id) throws HibernateException {
         Session session = this.sessionFactory.openSession();
         return session.load(User.class, id);
     }

@@ -13,20 +13,26 @@ public class DBHelper {
     private Connection connection;
     private Configuration configuration;
 
-    private static final String jdbcURL = "jdbc:mysql://localhost:3306/demo?useSSL=false";
-    private static final String jdbcUsername = "java";
-    private static final String jdbcPassword = "cookingpies";
+    private DBHelper() {
+    }
 
-    private static final String hibernate_show_sql = "true";
-    private static final String hibernate_hbm2ddl_auto = "validate";
+    private void setConfiguration() {
+        configuration = new Configuration();
+        configuration.addAnnotatedClass(User.class);
+        configuration.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
+        configuration.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
+        configuration.setProperty("hibernate.connection.url", "jdbc:mysql://localhost:3306/demo");
+        configuration.setProperty("hibernate.connection.username", "java");
+        configuration.setProperty("hibernate.connection.password", "cookingpies");
+        configuration.setProperty("hibernate.show_sql", "true");
+        configuration.setProperty("hibernate.hbm2ddl.auto", "validate");
+    }
 
-
-    // JDBC Constructor
-    private DBHelper(String jdbcURL, String jdbcUsername, String jdbcPassword) {
+    public void setConnection() {
         connection = null;
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            connection = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/demo?useSSL=false", "java", "cookingpies");
         } catch (SQLException e) {
             System.out.println(e.getSQLState());
             e.printStackTrace();
@@ -36,32 +42,19 @@ public class DBHelper {
         }
     }
 
-    // Hibernate Constructor
-    private DBHelper(String hibernate_show_sql, String hibernate_hbm2ddl_auto) {
-        configuration = new Configuration();
-        configuration.addAnnotatedClass(User.class);
-
-        configuration.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
-        configuration.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
-        configuration.setProperty("hibernate.connection.url", "jdbc:mysql://localhost:3306/demo");
-        configuration.setProperty("hibernate.connection.username", "java");
-        configuration.setProperty("hibernate.connection.password", "cookingpies");
-        configuration.setProperty("hibernate.show_sql", hibernate_show_sql);
-        configuration.setProperty("hibernate.hbm2ddl.auto", hibernate_hbm2ddl_auto);
-    }
-
     public static Connection getConnection() {
         if (dbHelper == null) {
-            dbHelper = new DBHelper(jdbcURL, jdbcUsername, jdbcPassword);
+            dbHelper = new DBHelper();
         }
+        dbHelper.setConnection();
         return dbHelper.connection;
     }
 
     public static Configuration getConfiguration() {
         if (dbHelper == null) {
-            dbHelper = new DBHelper(hibernate_show_sql, hibernate_hbm2ddl_auto);
+            dbHelper = new DBHelper();
         }
+        dbHelper.setConfiguration();
         return dbHelper.configuration;
     }
-
 }
