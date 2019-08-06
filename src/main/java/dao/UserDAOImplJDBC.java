@@ -1,9 +1,13 @@
 package dao;
 
 
-import config.DBConnection;
+import config.DBHelper;
 import model.User;
-import java.sql.*;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +22,7 @@ public class UserDAOImplJDBC implements UserDAO {
     private Connection connection;
 
     public UserDAOImplJDBC() {
-        this.connection = DBConnection.getConnection();
+        this.connection = DBHelper.getConnection();
     }
 
     public void addNewUser(User user) {
@@ -34,7 +38,7 @@ public class UserDAOImplJDBC implements UserDAO {
         }
     }
 
-    public User getUserbyID(Integer id) {
+    public User getUserByID(Integer id) {
         User user = null;
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_BY_ID);

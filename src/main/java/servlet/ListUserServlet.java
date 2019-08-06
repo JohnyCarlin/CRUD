@@ -1,8 +1,8 @@
 package servlet;
 
 import model.User;
-import service.UserServiceImpl;
 import service.UserService;
+import service.UserServiceImpl;
 
 import java.io.IOException;
 import java.util.List;
@@ -19,7 +19,7 @@ public class ListUserServlet extends HttpServlet {
     private UserService userService;
 
     public void init() {
-        userService = new UserServiceImpl();
+        userService = UserServiceImpl.getUserService();
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
